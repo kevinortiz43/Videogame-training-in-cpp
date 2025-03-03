@@ -31,7 +31,6 @@ void assign_circle_edges()
 
 // axe
 Color axe_color = RED;
-
 int axe_x{400};
 int axe_y{0};
 int axe_width{50};
@@ -39,11 +38,15 @@ int axe_height{50};
 int direction{10};
 
 // axe edges
-
 int l_axe_x;
 int r_axe_x;
 int u_axe_y;
 int b_axe_y;
+
+void axe_movement()
+{
+    axe_y += direction;
+};
 
 void assign_axe_edges()
 {
@@ -57,11 +60,14 @@ bool collision_with_axe = {};
 
 void check_collision()
 {
-    if ((b_axe_y >= u_circle_y) && (u_axe_y <= b_circle_y) && (r_axe_x >= l_circle_x) && (l_axe_x <= r_circle_x))
-    {
-        collision_with_axe = true;
-    }
+
+    ((b_axe_y >= u_circle_y) && (u_axe_y <= b_circle_y) && (r_axe_x >= l_circle_x) && (l_axe_x <= r_circle_x)) ? collision_with_axe = true : collision_with_axe;
 };
+
+Color game_over_text_font_color{RED};
+double game_over_text_font_size{20};
+int game_over_text_x_position{static_cast<int>(ceil(static_cast<double>(width) / 2))};
+int game_over_text_y_position{static_cast<int>(ceil(static_cast<double>(height) / 2))};
 
 int main()
 {
@@ -69,11 +75,6 @@ int main()
     InitWindow(width, height, "Kevin's game");
 
     SetTargetFPS(60);
-
-    int game_over_text_x_position{400};
-    int game_over_text_y_position{200};
-    int game_over_text_font_size{20};
-    Color game_over_text_font_color{RED};
 
     // collision
 
@@ -92,17 +93,14 @@ int main()
         {
 
             assign_circle_edges();
-            l_axe_x = axe_x;
-            r_axe_x = axe_x + axe_height;
-            u_axe_y = axe_y;
-            b_axe_y = axe_y + axe_height;
+            assign_axe_edges();
 
             check_collision();
 
             DrawCircle(circle_x, circle_y, radius_of_circle, circle_color);
             DrawRectangle(axe_x, axe_y, axe_width, axe_height, axe_color);
 
-            axe_y += direction;
+            axe_movement();
             if (axe_y > height || axe_y < 0)
             {
 
