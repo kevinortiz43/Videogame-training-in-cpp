@@ -3,13 +3,9 @@
 #include <string>
 
 // window
-int width{800};
-int height{450};
+int width{1600};
+int height{900};
 Color background_color = WHITE;
-
-// float root_beer = 1.99;
-// int cheese_burger = 5.99;
-// bool should_have_lunch = true;
 
 // circle
 Color circle_color = BLUE;
@@ -20,33 +16,55 @@ int circle_y{static_cast<int>(ceil(static_cast<double>(height) / 2))};
 int circle_movement = 10;
 int start_point = 0;
 
-int l_circle_x{circle_x - radius_of_circle};
-int r_circle_x{circle_x + radius_of_circle};
-int u_circle_y{circle_y - radius_of_circle};
-int b_circle_y{circle_y + radius_of_circle};
+int l_circle_x;
+int r_circle_x;
+int u_circle_y;
+int b_circle_y;
 
-// rectangle
-Color rectangular_color = RED;
+void assign_circle_edges()
+{
+    l_circle_x = {circle_x - radius_of_circle};
+    r_circle_x = {circle_x + radius_of_circle};
+    u_circle_y = {circle_y - radius_of_circle};
+    b_circle_y = {circle_y + radius_of_circle};
+};
 
-int rectangular_x{400};
-int rectangular_y{0};
-int rectangular_width{50};
-int rectangular_height{50};
+// axe
+Color axe_color = RED;
+
+int axe_x{400};
+int axe_y{0};
+int axe_width{50};
+int axe_height{50};
 int direction{10};
 
-// rectungalr adges
-int l_rectangle_x{rectangular_x};
-int r_rectangle_x{rectangular_x + rectangular_width};
-int u_rectangle_y{rectangular_y};
-int b_rectangle_y{rectangular_y - rectangular_height};
+// axe edges
+
+int l_axe_x;
+int r_axe_x;
+int u_axe_y;
+int b_axe_y;
+
+void assign_axe_edges()
+{
+    l_axe_x = {axe_x};
+    r_axe_x = {axe_x + axe_height};
+    u_axe_y = {axe_y};
+    b_axe_y = {axe_y - axe_height};
+};
+
+bool collision_with_axe = {};
+
+void check_collision()
+{
+    if ((b_axe_y >= u_circle_y) && (u_axe_y <= b_circle_y) && (r_axe_x >= l_circle_x) && (l_axe_x <= r_circle_x))
+    {
+        collision_with_axe = true;
+    }
+};
 
 int main()
 {
-
-    // bool equal{4 == 9};
-    // bool not_equal{4 != 9};
-    // bool less{4 < 9};
-    // bool greater{4 > 9};
 
     InitWindow(width, height, "Kevin's game");
 
@@ -58,26 +76,6 @@ int main()
     Color game_over_text_font_color{RED};
 
     // collision
-
-    bool collision_with_axe{};
-
-    // if (b_rectangle_y >= u_circle_y)
-    // {
-    //     collision_with_axe = true;
-    // }
-    // else if (u_rectangle_y <= b_circle_y)
-    // {
-    //     collision_with_axe = true;
-    // }
-
-    // else if (l_rectangle_x <= r_circle_x)
-    // {
-    //     collision_with_axe = true;
-    // }
-    // else if (r_rectangle_x >= l_circle_x)
-    // {
-    //     collision_with_axe = true;
-    // }
 
     while (!WindowShouldClose())
     {
@@ -92,11 +90,20 @@ int main()
 
         else
         {
-            DrawCircle(circle_x, circle_y, radius_of_circle, circle_color);
-            DrawRectangle(rectangular_x, rectangular_y, rectangular_width, rectangular_height, rectangular_color);
 
-            rectangular_y += direction;
-            if (rectangular_y > height || rectangular_y < 0)
+            assign_circle_edges();
+            l_axe_x = axe_x;
+            r_axe_x = axe_x + axe_height;
+            u_axe_y = axe_y;
+            b_axe_y = axe_y + axe_height;
+
+            check_collision();
+
+            DrawCircle(circle_x, circle_y, radius_of_circle, circle_color);
+            DrawRectangle(axe_x, axe_y, axe_width, axe_height, axe_color);
+
+            axe_y += direction;
+            if (axe_y > height || axe_y < 0)
             {
 
                 direction = -direction;
